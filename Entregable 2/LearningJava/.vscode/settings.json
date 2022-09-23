@@ -1,0 +1,15 @@
+{
+	"java.project.sourcePaths": [
+		"src"
+	],
+	"java.project.outputPath": "bin",
+	"java.project.referencedLibraries": {
+		"include": [
+			"lib/**/*.jar",
+			"library/json-20220320.jar"
+		],
+		"exclude": [
+			"e:\\Users\\1031578\\Downloads\\java-json.jar\\java-json.jar"
+		]
+	}
+}
