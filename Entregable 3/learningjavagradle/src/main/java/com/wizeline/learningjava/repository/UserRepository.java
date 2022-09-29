@@ -1,9 +1,8 @@
 package com.wizeline.learningjava.repository;
 
-public interface UserRepository {
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-	String createUser(String user, String password);
+import com.wizeline.learningjava.model.UserDTO;
 
-	String login(String user, String password);
-
+public interface UserRepository extends MongoRepository<UserDTO, String> {
 }
