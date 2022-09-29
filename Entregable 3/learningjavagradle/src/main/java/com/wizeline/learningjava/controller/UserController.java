@@ -26,21 +26,31 @@ public class UserController {
 	private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
 	@GetMapping(value = "/login", produces = "application/json")
-	public ResponseEntity<ResponseDTO> loginUser(@RequestParam String user, @RequestParam String password) {
+	public ResponseEntity<?> loginUser(@RequestParam String user, @RequestParam String password) {
 		LOGGER.info("LearningJava - Procesando peticion HTTP de tipo GET");
 		ResponseDTO response = new ResponseDTO();
 		response = userService.login(user, password);
-		LOGGER.info("Login - Completed");
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		if (response.getCode().equals("OK000")) {
+			LOGGER.info("Login - Completed");
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} else {
+			LOGGER.info("Login - Error");
+			return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+		}
 	}
 
 	@PostMapping(value = "/createUser", produces = "application/json")
-	public ResponseEntity<ResponseDTO> createUserAccount(@RequestBody UserDTO request) {
+	public ResponseEntity<?> createUserAccount(@RequestBody UserDTO request) {
 		LOGGER.info("LearningJava - Procesando peticion HTTP de tipo POST - Starting... ");
 		ResponseDTO response = new ResponseDTO();
 		response = userService.createUser(request.getUser(), request.getPassword());
-		LOGGER.info("Create user - Completed");
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		if (response.getCode().equals("OK000")) {
+			LOGGER.info("Create user - Completed");
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} else {
+			LOGGER.info("Create user - ERROR");
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

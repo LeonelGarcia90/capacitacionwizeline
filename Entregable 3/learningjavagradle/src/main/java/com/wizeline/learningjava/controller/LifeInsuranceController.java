@@ -22,7 +22,7 @@ public class LifeInsuranceController {
 	private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
 	@GetMapping(value = "/getLifeInsurance", produces = "application/json")
-	public ResponseEntity<InsuranceBase> getInsurance(@RequestParam int cost) {
+	public ResponseEntity<?> getInsurance(@RequestParam int cost) {
 		LOGGER.info("LearningJava - Procesando peticion HTTP de tipo GET");
 		InsuranceBase response = new InsuranceBase();
 		if (cost == 10) {
@@ -32,10 +32,8 @@ public class LifeInsuranceController {
 			LifeInsurance20 lifeInsurance20 = new LifeInsurance20();
 			response = lifeInsurance20.getInsurance(cost);
 		} else {
-			response.setCost(0);
-			response.setDescription("Parametros incorrectos, favor de validar");
-			response.setName(null);
-			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Parametros incorrectos, favor de validad el costo del seguro",
+					HttpStatus.BAD_REQUEST);
 		}
 		LOGGER.info("Login - Completed");
 		return new ResponseEntity<>(response, HttpStatus.OK);

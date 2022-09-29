@@ -2,8 +2,13 @@ package com.wizeline.learningjava.model;
 
 import java.util.Map;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document("userCollection")
 public class UserDTO {
 
+	@Id
 	private String user;
 
 	private String password;
