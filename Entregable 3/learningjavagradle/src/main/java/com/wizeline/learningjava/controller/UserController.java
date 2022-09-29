@@ -24,7 +24,6 @@ public class UserController {
 	private UserService userService;
 
 	private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
-	String msgProcPeticion = "LearningJava - Inicia procesamiento de peticion ...";
 
 	@GetMapping(value = "/login", produces = "application/json")
 	public ResponseEntity<ResponseDTO> loginUser(@RequestParam String user, @RequestParam String password) {

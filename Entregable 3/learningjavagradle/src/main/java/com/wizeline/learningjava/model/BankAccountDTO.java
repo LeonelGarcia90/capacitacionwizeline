@@ -2,15 +2,20 @@ package com.wizeline.learningjava.model;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import com.wizeline.learningjava.enums.AccountType;
 
+@Document("bankAccountCollection")
 public class BankAccountDTO {
 
-	private long accountNumber;
+	@Id
+	private Long accountNumber;
 
 	private String accountName;
 
-	private String user;
+	private String userName;
 
 	private double accountBalance;
 
@@ -40,12 +45,12 @@ public class BankAccountDTO {
 		this.accountName = accountName;
 	}
 
-	public String getUser() {
-		return user;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public double getAccountBalance() {
@@ -95,5 +100,4 @@ public class BankAccountDTO {
 	public void setLastUsage(LocalDateTime lastUsage) {
 		this.lastUsage = lastUsage;
 	}
-
 }

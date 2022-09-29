@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -105,6 +106,25 @@ public class BankingAccountController {
 
 	}
 
+	@GetMapping("/getAccountByUser")
+	public ResponseEntity<List<BankAccountDTO>> getAccountByUser(@RequestParam String user) {
+		LOGGER.info(msgProcPeticion);
+		Instant inicioDeEjecucion = Instant.now();
+		LOGGER.info("LearningJava - Procesando peticion HTTP de tipo GET");
+		List<BankAccountDTO> accounts = bankAccountService.getAccountByUser(user);
+
+		Instant finalDeEjecucion = Instant.now();
+
+		LOGGER.info("LearningJava - Cerrando recursos ...");
+		String total = new String(
+				String.valueOf(Duration.between(inicioDeEjecucion, finalDeEjecucion).toMillis()).concat(" segundos."));
+		LOGGER.info("Tiempo de respuesta: ".concat(total));
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json; charset=UTF-8");
+		return new ResponseEntity<>(accounts, responseHeaders, HttpStatus.OK);
+	}
+
 	@GetMapping("/getAccountsGroupByType")
 	public ResponseEntity<Map<String, List<BankAccountDTO>>> getAccountsGroupByType() {
 
@@ -126,6 +146,12 @@ public class BankingAccountController {
 		LOGGER.info("Tiempo de respuesta: ".concat(total));
 
 		return new ResponseEntity<>(groupedAccounts, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/deleteAccounts")
+	public ResponseEntity<String> deleteAccounts() {
+		bankAccountService.deleteAccounts();
+		return new ResponseEntity<>("All accounts deleted", HttpStatus.OK);
 	}
 
 	private BankAccountDTO getAccountDetails(String user, String lastUsage) {
