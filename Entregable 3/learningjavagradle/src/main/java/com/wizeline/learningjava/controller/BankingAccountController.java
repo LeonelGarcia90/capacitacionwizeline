@@ -9,16 +9,22 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wizeline.learningjava.client.AccountsJSONClient;
 import com.wizeline.learningjava.model.BankAccountDTO;
+import com.wizeline.learningjava.model.Post;
 import com.wizeline.learningjava.model.ResponseDTO;
 import com.wizeline.learningjava.service.BankAccountService;
 import com.wizeline.learningjava.service.UserService;
@@ -39,8 +45,24 @@ public class BankingAccountController {
 	@Autowired
 	private Utils utils;
 
+	@Autowired
+	AccountsJSONClient accountsJSONClient;
+
+	@Value("${server.port}")
+	private String port;
+
+	@Autowired
+	private KafkaTemplate<Object, Object> template;
+
 	private static final Logger LOGGER = Logger.getLogger(BankingAccountController.class.getName());
 	String msgProcPeticion = "LearningJava - Inicia procesamiento de peticion ...";
+
+	@PostMapping(path = "/send/{userId}")
+	public void sendUserAccount(@PathVariable Integer userId) {
+		List<BankAccountDTO> accounts = bankAccountService.getAccounts();
+		BankAccountDTO account = accounts.get(userId);
+		this.template.send("useraccount-topic", account);
+	}
 
 	@GetMapping("/getUserAccount")
 	public ResponseEntity<?> getUserAccount(@RequestParam String user, @RequestParam String password,
@@ -88,6 +110,7 @@ public class BankingAccountController {
 
 	@GetMapping("/getAccounts")
 	public ResponseEntity<List<BankAccountDTO>> getAccounts() {
+		LOGGER.info("The port used is " + port);
 		LOGGER.info(msgProcPeticion);
 		Instant inicioDeEjecucion = Instant.now();
 		LOGGER.info("LearningJava - Procesando peticion HTTP de tipo GET");
@@ -156,6 +179,24 @@ public class BankingAccountController {
 
 	private BankAccountDTO getAccountDetails(String user, String lastUsage) {
 		return bankAccountService.getAccountDetails(user, lastUsage);
+	}
+
+	@GetMapping("/getExternalUser/{userId}")
+	public ResponseEntity<Post> getExternalUser(@PathVariable Long userId) {
+
+		Post postTest = accountsJSONClient.getPostById(userId);
+		LOGGER.info("Getting post userId..." + postTest.getUserId());
+		LOGGER.info("Getting post body..." + postTest.getBody());
+		LOGGER.info("Getting post title..." + postTest.getTitle());
+		postTest.setUserId("External user " + utils.randomAcountNumber());
+		postTest.setBody("No info in accountBalance since it is an external user");
+		postTest.setTitle("No info in title since it is an external user");
+		LOGGER.info("Setting post userId..." + postTest.getUserId());
+		LOGGER.info("Setting post body..." + postTest.getBody());
+		LOGGER.info("Setting post title...." + postTest.getTitle());
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json; charset=UTF-8");
+		return new ResponseEntity<>(postTest, responseHeaders, HttpStatus.OK);
 	}
 
 }
