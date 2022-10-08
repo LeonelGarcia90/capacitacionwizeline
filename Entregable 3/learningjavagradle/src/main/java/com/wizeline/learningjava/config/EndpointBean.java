@@ -21,6 +21,10 @@ public class EndpointBean {
 
 	@NotNull
 	@NotBlank
+	private String updatePassword;
+
+	@NotNull
+	@NotBlank
 	private String createUsers;
 
 	@NotNull
@@ -49,6 +53,14 @@ public class EndpointBean {
 
 	public void setCreateUser(String createUser) {
 		this.createUser = createUser;
+	}
+
+	public String getUpdatePassword() {
+		return updatePassword;
+	}
+
+	public void setUpdatePassword(String updatePassword) {
+		this.updatePassword = updatePassword;
 	}
 
 	public String getCreateUsers() {

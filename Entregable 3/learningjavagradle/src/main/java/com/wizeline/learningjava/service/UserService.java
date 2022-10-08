@@ -8,4 +8,6 @@ public interface UserService {
 
 	ResponseDTO login(String user, String password);
 
+	ResponseDTO updatePassword(String user, String newPassword);
+
 }
