@@ -42,10 +42,10 @@ public class UserController {
 	}
 
 	@PostMapping(value = "/createUser", produces = "application/json")
-	public ResponseEntity<?> createUserAccount(@RequestBody UserDTO request) {
+	public ResponseEntity<?> createUserAccount(@RequestParam String user, @RequestParam String password) {
 		LOGGER.info("LearningJava - Procesando peticion HTTP de tipo POST - Starting... ");
 		ResponseDTO response = new ResponseDTO();
-		response = userService.createUser(request.getUser(), request.getPassword());
+		response = userService.createUser(user, password);
 		if (response.getCode().equals("OK000")) {
 			LOGGER.info("Create user - Completed");
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -56,11 +56,10 @@ public class UserController {
 	}
 
 	@PostMapping(value = "/updatePassword", produces = "application/json")
-	public ResponseEntity<?> updateUserPassword(@RequestBody UserDTO request,
-			@RequestHeader Map<String, String> headers) {
+	public ResponseEntity<?> updateUserPassword(@RequestParam String user, @RequestParam String password) {
 		LOGGER.info("LearningJava - Procesando peticion HTTP de tipo POST - Starting... ");
 		ResponseDTO response = new ResponseDTO();
-		response = userService.updatePassword(request.getUser(), request.getPassword());
+		response = userService.updatePassword(user, password);
 		if (response.getCode().equals("OK000")) {
 			LOGGER.info("Update password - Completed");
 			return new ResponseEntity<>(response, HttpStatus.OK);

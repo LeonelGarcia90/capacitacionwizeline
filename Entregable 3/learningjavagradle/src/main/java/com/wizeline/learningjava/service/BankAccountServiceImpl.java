@@ -6,7 +6,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -37,47 +40,25 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 	@Override
 	public List<BankAccountDTO> getAccounts() {
-		// Definicion de lista con la informacion de las cuentas existentes.
 		List<BankAccountDTO> accountDTOList = new ArrayList<>();
 		BankAccountDTO bankAccountOne = buildBankAccount("user3@wizeline.com", true, Country.MX,
 				LocalDateTime.now().minusDays(7));
 		accountDTOList.add(bankAccountOne);
-
-		//Guardar cada record en la db de mongo (en la coleccion bankAccountCollection)
 		mongoTemplate.save(bankAccountOne);
-
 		BankAccountDTO bankAccountTwo = buildBankAccount("user1@wizeline.com", false, Country.FR,
 				LocalDateTime.now().minusMonths(2));
 		accountDTOList.add(bankAccountTwo);
-
-		//Guardar cada record en la db de mongo (en la coleccion bankAccountCollection)
 		mongoTemplate.save(bankAccountTwo);
-
 		BankAccountDTO bankAccountThree = buildBankAccount("user2@wizeline.com", false, Country.US,
 				LocalDateTime.now().minusYears(4));
 		accountDTOList.add(bankAccountThree);
-
-		//Guardar cada record en la db de mongo (en la coleccion bankAccountCollection)
 		mongoTemplate.save(bankAccountThree);
-
-		//Imprime en la Consola cuales son los records encontrados en la coleccion
-		//bankAccountCollection de la mongo db
 		mongoTemplate.findAll(BankAccountDTO.class).stream().map(bankAccountDTO -> bankAccountDTO.getUserName())
 				.forEach(
 						(user) -> {
 							LOGGER.info("User stored in bankAccountCollection " + user);
 						});
-
-		//Esta es la respuesta que se retorna al Controlador
-		//y que sera desplegada cuando se haga la llamada a los
-		//REST endpoints que la invocan (un ejemplo es el endpoint de  getAccounts)
 		return accountDTOList;
-	}
-
-	@Override
-	public void deleteAccounts() {
-		//Borrar todos los records que esten dentro de la coleccion bankAccountCollection en mongo db.
-		bankAccountRepository.deleteAll();
 	}
 
 	@Override
@@ -97,6 +78,16 @@ public class BankAccountServiceImpl implements BankAccountService {
 		return buildBankAccount(user, true, Country.MX, usage.atStartOfDay());
 	}
 
+	@Override
+
+	public Map<String, List<BankAccountDTO>> getAccountsGroupByType() {
+		List<BankAccountDTO> accounts = getAccounts();
+		Function<BankAccountDTO, String> groupFunction = (account) -> account.getAccountType().toString();
+		Map<String, List<BankAccountDTO>> groupedAccounts = accounts.stream()
+				.collect(Collectors.groupingBy(groupFunction));
+		return groupedAccounts;
+	};
+
 	// Creación de tipo de dato BankAccount
 	private BankAccountDTO buildBankAccount(String user, boolean isActive, Country country, LocalDateTime lastUsage) {
 		BankAccountDTO bankAccountDTO = new BankAccountDTO();
@@ -110,5 +101,10 @@ public class BankAccountServiceImpl implements BankAccountService {
 		bankAccountDTO.setCreationDate(lastUsage);
 		bankAccountDTO.setAccountActive(isActive);
 		return bankAccountDTO;
+	}
+
+	@Override
+	public void deleteAccounts() {
+		bankAccountRepository.deleteAll();
 	}
 }
