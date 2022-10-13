@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.wizeline.learningjava.model.ResponseDTO;
+import com.wizeline.learningjava.model.UserDTO;
 import com.wizeline.learningjava.service.UserServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -73,13 +74,15 @@ public class UserControllerTest {
 	void DadoUsuarioYContraseniaDeUsuarioNoRegistrado_CuandoGUardaUsuario_EntoncesRegresaStatusOk() {
 		LOGGER.info(
 				"Se prueba Edge Case de endpoint createUser con parametros user - userwizeline59@gmail.com - password: conTr@53na");
-		String user = "userwizeline2@gmail.com";
-		String password = "conTr@53na";
+
+		UserDTO userDTO = new UserDTO();
+		userDTO.setUser("userwizeline2@gmail.com");
+		userDTO.setPassword("conTr@53na");
 		ResponseDTO responseDTO = new ResponseDTO();
 		responseDTO.setCode("OK000");
 		responseDTO.setStatus("success");
-		when(userServiceImpl.createUser(user, password)).thenReturn(responseDTO);
-		final ResponseEntity<?> respuesta = userController.createUserAccount(user, password);
+		when(userServiceImpl.createUser(userDTO.getUser(), userDTO.getPassword())).thenReturn(responseDTO);
+		final ResponseEntity<?> respuesta = userController.createUserAccount(userDTO);
 		assertAll(
 				() -> assertNotNull(respuesta),
 				() -> assertEquals(HttpStatus.OK, respuesta.getStatusCode()),
@@ -92,13 +95,14 @@ public class UserControllerTest {
 	void DadoUsuarioYContraseniaDeUsuarioRegistrado_CuandoGuardaUsuario_EntoncesRegresaStatusBADREQUEST() {
 		LOGGER.info(
 				"Se prueba Edge Case de endpoint createUser con parametros user - userwizeline59@gmail.com - password: conTr@53na");
-		String user = "userwizeline2@gmail.com";
-		String password = "conTr@53na";
+		UserDTO userDTO = new UserDTO();
+		userDTO.setUser("userwizeline2@gmail.com");
+		userDTO.setPassword("conTr@53na");
 		ResponseDTO responseDTO = new ResponseDTO();
 		responseDTO.setCode("ER004");
 		responseDTO.setStatus("fail");
-		when(userServiceImpl.createUser(user, password)).thenReturn(responseDTO);
-		final ResponseEntity<?> respuesta = userController.createUserAccount(user, password);
+		when(userServiceImpl.createUser(userDTO.getUser(), userDTO.getPassword())).thenReturn(responseDTO);
+		final ResponseEntity<?> respuesta = userController.createUserAccount(userDTO);
 		assertAll(
 				() -> assertNotNull(respuesta),
 				() -> assertEquals(HttpStatus.BAD_REQUEST, respuesta.getStatusCode()),
@@ -111,13 +115,14 @@ public class UserControllerTest {
 	void DadoUsuarioYContraseniaDeUsuarioExistente_CuandoActualizaUsuario_EntoncesRegresaStatusOk() {
 		LOGGER.info(
 				"Se prueba Edge Case de endpoint createUser con parametros user - userwizeline59@gmail.com - password: conTr@53na");
-		String user = "userwizeline2@gmail.com";
-		String password = "conTr@53na";
+		UserDTO userDTO = new UserDTO();
+		userDTO.setUser("userwizeline2@gmail.com");
+		userDTO.setPassword("conTr@53na");
 		ResponseDTO responseDTO = new ResponseDTO();
 		responseDTO.setCode("OK000");
 		responseDTO.setStatus("success");
-		when(userServiceImpl.updatePassword(user, password)).thenReturn(responseDTO);
-		final ResponseEntity<?> respuesta = userController.updateUserPassword(user, password);
+		when(userServiceImpl.updatePassword(userDTO.getUser(), userDTO.getPassword())).thenReturn(responseDTO);
+		final ResponseEntity<?> respuesta = userController.updateUserPassword(userDTO);
 		assertAll(
 				() -> assertNotNull(respuesta),
 				() -> assertEquals(HttpStatus.OK, respuesta.getStatusCode()),
@@ -130,13 +135,14 @@ public class UserControllerTest {
 	void DadoUsuarioYContraseniaDeUsuarioExistente_CuandoActualizaUsuario_EntoncesRegresaStatusBADREQUEST() {
 		LOGGER.info(
 				"Se prueba Edge Case de endpoint createUser con parametros user - userwizeline59@gmail.com - password: conTr@53na");
-		String user = "userwizeline2@gmail.com";
-		String password = "conTr@53na";
+		UserDTO userDTO = new UserDTO();
+		userDTO.setUser("userwizeline2@gmail.com");
+		userDTO.setPassword("conTr@53na");
 		ResponseDTO responseDTO = new ResponseDTO();
 		responseDTO.setCode("ER004");
 		responseDTO.setStatus("fail");
-		when(userServiceImpl.updatePassword(user, password)).thenReturn(responseDTO);
-		final ResponseEntity<?> respuesta = userController.updateUserPassword(user, password);
+		when(userServiceImpl.updatePassword(userDTO.getUser(), userDTO.getPassword())).thenReturn(responseDTO);
+		final ResponseEntity<?> respuesta = userController.updateUserPassword(userDTO);
 		assertAll(
 				() -> assertNotNull(respuesta),
 				() -> assertEquals(HttpStatus.BAD_REQUEST, respuesta.getStatusCode()),

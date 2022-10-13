@@ -27,7 +27,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"user\":\"user2@wizeline.com\",\n    \"password\":\"P@55w0rd12\"\n}",
+					"raw": "{\n    \"user\":\"user2@wizeline.com\",\n    \"password\":\"P@55w0rd69\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,30 +43,18 @@
 					"path": [
 						"api",
 						"createUser"
-					],
-					"query": [
-						{
-							"key": "user",
-							"value": "usuario1@wizeline.com",
-							"disabled": true
-						},
-						{
-							"key": "password",
-							"value": "Pa$$w0rd123",
-							"disabled": true
-						}
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "LearningJava/updateUser",
+			"name": "LearningJava/updatePassword",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {}
 			},
 			"request": {
-				"method": "POST",
+				"method": "PUT",
 				"header": [
 					{
 						"key": "Accept",
@@ -87,7 +75,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"user\":\"user1@wizeline.com\",\n    \"password\":\"conTr@53na\"\n}",
+					"raw": "{\n    \"user\":\"user1@wizeline.com\",\n    \"password\":\"conTr@5369\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -103,18 +91,6 @@
 					"path": [
 						"api",
 						"updatePassword"
-					],
-					"query": [
-						{
-							"key": "user",
-							"value": "usuario1@wizeline.com",
-							"disabled": true
-						},
-						{
-							"key": "password",
-							"value": "Pa$$w0rd123",
-							"disabled": true
-						}
 					]
 				}
 			},

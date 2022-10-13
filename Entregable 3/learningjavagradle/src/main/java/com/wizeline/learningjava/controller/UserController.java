@@ -1,6 +1,5 @@
 package com.wizeline.learningjava.controller;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,10 +41,10 @@ public class UserController {
 	}
 
 	@PostMapping(value = "/createUser", produces = "application/json")
-	public ResponseEntity<?> createUserAccount(@RequestParam String user, @RequestParam String password) {
+	public ResponseEntity<?> createUserAccount(@RequestBody UserDTO usuario) {
 		LOGGER.info("LearningJava - Procesando peticion HTTP de tipo POST - Starting... ");
 		ResponseDTO response = new ResponseDTO();
-		response = userService.createUser(user, password);
+		response = userService.createUser(usuario.getUser(), usuario.getPassword());
 		if (response.getCode().equals("OK000")) {
 			LOGGER.info("Create user - Completed");
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -55,11 +54,11 @@ public class UserController {
 		}
 	}
 
-	@PostMapping(value = "/updatePassword", produces = "application/json")
-	public ResponseEntity<?> updateUserPassword(@RequestParam String user, @RequestParam String password) {
+	@PutMapping(value = "/updatePassword", produces = "application/json")
+	public ResponseEntity<?> updateUserPassword(@RequestBody UserDTO usuario) {
 		LOGGER.info("LearningJava - Procesando peticion HTTP de tipo POST - Starting... ");
 		ResponseDTO response = new ResponseDTO();
-		response = userService.updatePassword(user, password);
+		response = userService.updatePassword(usuario.getUser(), usuario.getPassword());
 		if (response.getCode().equals("OK000")) {
 			LOGGER.info("Update password - Completed");
 			return new ResponseEntity<>(response, HttpStatus.OK);
